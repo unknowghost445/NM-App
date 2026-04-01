@@ -10,24 +10,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.test_kotlin_app.databinding.ActivityProfileBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
 
 class Profile : AppCompatActivity() {
 
     private lateinit var binding: ActivityProfileBinding
-    private lateinit var auth: FirebaseAuth
+
+    val supabase = Database.SupabaseClient.client
 
     private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        auth = Firebase.auth
 
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -41,10 +40,7 @@ class Profile : AppCompatActivity() {
         initializeProfile()
 
         binding.btnPExit.setOnClickListener {
-            val userPrefs = UserPreferences(this)
             lifecycleScope.launch {
-                userPrefs.clearLoginStatus()
-
                 val intent = Intent(this@Profile, Login::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
@@ -55,47 +51,56 @@ class Profile : AppCompatActivity() {
         binding.btnPSave.setOnClickListener {
             saveProfile()
         }
+
+        binding.btnPMainPage.setOnClickListener{
+            startActivity(Intent(this@Profile, MainPage::class.java))
+        }
     }
 
     private fun initializeProfile() {
         binding.progressBar.visibility = View.VISIBLE
-        val userID = auth.currentUser?.uid
-        val db = Firebase.firestore
+        val userAuth = supabase.auth.currentUserOrNull()
 
-        if(userID != null) {
-            db.collection("users").document(userID).get()
-                .addOnSuccessListener { document ->
+        if(userAuth != null) {
+            lifecycleScope.launch {
+                try{
+                    user = supabase.from("users").select{
+                        filter {
+                            eq("userID", userAuth.id)
+                        }
+                    }.decodeSingle<User>()
+
                     binding.progressBar.visibility = View.GONE
 
-                    if(document != null && document.exists()) {
-                        user = document.toObject(User::class.java)!!
+                    binding.tvProfile.text = "${user.name}!"
 
-                        if(user != null) {
-                            binding.etPName.setText(user.name)
-                            binding.etPEmail.setText(user.email)
-                            binding.etPAddress.setText(user.address)
-                            binding.etPDescription.setText(user.description)
-                        }else {
-                            Log.d("Profile", "User object is null")
-                        }
-                    }
+                    binding.etPName.setText(user.name)
+                    binding.etPEmail.setText(user.email)
+                    binding.etPAddress.setText(user.address)
+                    binding.etPAvatarUrl.setText(user.avatarUrl)
+                    loadAvatar()
+                    binding.etPDescription.setText(user.description)
+                }catch (e: Exception){
+                    Log.e("Profile", "Error: ${e.message}")
+                }finally {
+                    binding.progressBar.visibility = View.GONE
                 }
-                .addOnFailureListener {
-                    Log.e("Profile", "Error getting user document")
-                }
+            }
+        }else{
+            Log.e("Profile", "User not found")
         }
     }
 
     private fun saveProfile() {
-        val userID = auth.currentUser?.uid
-        val db = Firebase.firestore
+        val userAuth = supabase.auth.currentUserOrNull()
 
         val name = binding.etPName.text
         val address = binding.etPAddress.text
         val description = binding.etPDescription.text
+        val avatarUrl = binding.etPAvatarUrl.text
         var changes = false
 
-        if(userID != null && user != null) {
+        if(userAuth != null) {
             if(user.name  != name.toString().trim()) {
                 user.name = name.toString().trim()
                 changes = true
@@ -108,16 +113,40 @@ class Profile : AppCompatActivity() {
                 user.description = description.toString().trim()
                 changes = true
             }
+            if(user.avatarUrl != avatarUrl.toString().trim()) {
+                user.avatarUrl = avatarUrl.toString().trim()
+                loadAvatar()
+                changes = true
+            }
 
             if(changes) {
-                db.collection("users").document(userID).set(user)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    try {
+                        supabase.from("users").update(
+                            mapOf(
+                                "name" to user.name,
+                                "address" to user.address,
+                                "avatarUrl" to user.avatarUrl,
+                                "description" to user.description
+                            )
+                        ){
+                            filter {
+                                eq("userID", userAuth.id)
+                            }
+                        }
+
+                        Toast.makeText(this@Profile, "Update successfully", Toast.LENGTH_SHORT).show()
+                    }catch (e: Exception){
+                        Log.e("Profile", "Error: ${e.message}")
                     }
-                    .addOnFailureListener {
-                        Log.e("Profile", "Error updating profile")
-                    }
+                }
             }
         }
+    }
+
+    private fun loadAvatar(){
+        Glide.with(this)
+            .load(binding.etPAvatarUrl.text.toString().trim())
+            .into(binding.imageView)
     }
 }

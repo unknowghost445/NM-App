@@ -8,120 +8,149 @@
     tools:context=".Profile">
 
     <ScrollView
+        android:id="@+id/PscrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="131dp"
-                android:layout_height="118dp"
-                android:scaleType="fitXY"
+                android:layout_width="107dp"
+                android:layout_height="86dp"
                 android:layout_margin="15dp"
-                app:srcCompat="@drawable/abstract_user_flat_3"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:srcCompat="@drawable/abstract_user_flat_3" />
 
             <TextView
                 android:id="@+id/tvProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
                 android:text="Profile"
                 android:textSize="34sp"
                 android:textStyle="bold"
-                android:layout_marginTop="50dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imageView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/imageView"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvPName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
-                android:layout_marginTop="50dp"
                 android:layout_marginStart="34dp"
-                app:layout_constraintTop_toBottomOf="@id/tvProfile"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:layout_marginTop="34dp"
+                android:text="Name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvProfile" />
 
             <EditText
                 android:id="@+id/etPName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="34dp"
                 android:ems="10"
                 android:hint="Name"
                 android:inputType="text"
                 android:padding="12dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="34dp"
-                android:layout_marginEnd="34dp"
-                app:layout_constraintTop_toBottomOf="@id/tvPName"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/tvPName" />
 
             <TextView
                 android:id="@+id/tvPEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="34dp"
-                app:layout_constraintTop_toBottomOf="@id/etPName"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:layout_marginTop="28dp"
+                android:text="Email"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPName" />
 
             <EditText
                 android:id="@+id/etPEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:hint="Email"
-                android:padding="12dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="34dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="34dp"
+                android:ems="10"
                 android:enabled="false"
-                app:layout_constraintTop_toBottomOf="@id/tvPEmail"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/tvPEmail" />
 
             <TextView
                 android:id="@+id/tvPAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Address"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="34dp"
-                app:layout_constraintTop_toBottomOf="@id/etPEmail"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:layout_marginTop="28dp"
+                android:text="Address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPEmail" />
 
             <EditText
                 android:id="@+id/etPAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text"
-                android:hint="Address"
-                android:padding="12dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="34dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="34dp"
-                app:layout_constraintTop_toBottomOf="@id/tvPAddress"
+                android:ems="10"
+                android:hint="Address"
+                android:inputType="text"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/tvPAddress" />
+
+            <TextView
+                android:id="@+id/tvPAvatarUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="28dp"
+                android:text="Avatar Url"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPAddress" />
+
+            <EditText
+                android:id="@+id/etPAvatarUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="34dp"
+                android:ems="10"
+                android:hint="https://xxxx.xxx.xxxx"
+                android:inputType="text"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvPAvatarUrl" />
 
             <TextView
                 android:id="@+id/tvPDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="34dp"
-                app:layout_constraintTop_toBottomOf="@id/etPAddress"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:layout_marginTop="28dp"
+                android:text="Description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPAvatarUrl" />
 
             <EditText
                 android:id="@+id/etPDescription"
@@ -132,8 +161,8 @@
                 android:layout_marginEnd="34dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:inputType="textMultiLine"
                 android:hint="Description"
+                android:inputType="textMultiLine"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvPDescription" />
@@ -142,33 +171,33 @@
                 android:id="@+id/btnPSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:layout_marginStart="34dp"
+                android:layout_marginTop="32dp"
                 android:text="Save"
-                app:layout_constraintTop_toBottomOf="@id/etPDescription"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPDescription" />
 
             <Button
                 android:id="@+id/btnPExit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="34dp"
                 android:text="Exit"
-                app:layout_constraintTop_toBottomOf="@id/etPDescription"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etPDescription" />
 
             <Button
                 android:id="@+id/btnDelAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                android:backgroundTint="#ff0000"
                 android:text="Delete Account"
                 android:textColor="@color/black"
-                android:layout_margin="20dp"
-                android:backgroundTint="#ff0000"
-                app:layout_constraintTop_toBottomOf="@id/btnPSave"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/btnPSave" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -183,5 +212,28 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnPMainPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Main Page"/>
+
+        <Button
+            android:id="@+id/btnPProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Profile" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

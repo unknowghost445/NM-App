@@ -8,21 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import com.example.test_kotlin_app.databinding.ActivityRegisterBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.launch
 
 class Register : AppCompatActivity() {
 
+    val supabase = Database.SupabaseClient.client
+
     private lateinit var binding: ActivityRegisterBinding
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        auth = Firebase.auth
 
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -38,35 +36,30 @@ class Register : AppCompatActivity() {
         binding.btnRegister.setOnClickListener {
             if(checkValidRegister()) {
                 val name = binding.etRName.text.toString().trim()
-                val email = binding.etREmail.text.toString().trim()
+                val em = binding.etREmail.text.toString().trim()
                 val pass = binding.etRPass.text.toString()
 
-                auth.createUserWithEmailAndPassword(email, pass)
-                    .addOnSuccessListener(this) {
-                        val db = Firebase.firestore
-                        val userID = auth.currentUser?.uid
+                lifecycleScope.launch {
+                    binding.btnRegister.isEnabled = false
 
-                        val userMap = hashMapOf(
-                            "name" to name,
-                            "email" to email,
-                            "address" to "",
-                            "description" to "",
-                        )
+                     val result = Database.Auth.register(name, em, pass)
 
-                        if(userID != null) {
-                            db.collection("users").document(userID).set(userMap)
-                                .addOnSuccessListener {
-                                    Toast.makeText(this, "Register successfully", Toast.LENGTH_SHORT).show()
-                                    startActivity(Intent(this@Register, Login::class.java))
-                                }
-                                .addOnFailureListener {
-                                    Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-                                }
+                    result.onSuccess{
+                        Toast.makeText(this@Register, "Register successfully", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@Register, Login::class.java))
+                        finish()
+                    }
+
+                    result.onFailure {e ->
+                        if (e.message?.contains("User already registered") == true) {
+                            binding.etREmail.error = "Email already exists"
+                        } else {
+                            Toast.makeText(this@Register, e.message, Toast.LENGTH_SHORT).show()
                         }
                     }
-                    .addOnFailureListener(this) {
-                        Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-                    }
+
+                    binding.btnRegister.isEnabled = true
+                }
             }
         }
 

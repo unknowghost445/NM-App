@@ -2,57 +2,65 @@ package com.example.test_kotlin_app
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.example.test_kotlin_app.databinding.ActivityLoginBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.Firebase
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.createSupabaseClient
+import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.launch
+import io.github.jan.supabase.auth.providers.builtin.Email
+
 
 class Login : AppCompatActivity() {
 
+    val supabase = Database.SupabaseClient.client
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        auth = Firebase.auth
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val userPrefs = UserPreferences(this)
-        lifecycleScope.launch {
-            userPrefs.isLoggedIn.collect {
-                loggedIn -> if(loggedIn){
-                    startActivity(Intent(this@Login, Profile::class.java))
-                    finish()
-                }
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
 
         setDisableError()
 
         binding.btnLogin.setOnClickListener {
-            val email = binding.etLEmail.text.toString().trim()
+            val em = binding.etLEmail.text.toString().trim()
             val pass = binding.etLPass.text.toString()
 
             if(checkValid()) {
-                auth.signInWithEmailAndPassword(email, pass)
-                    .addOnSuccessListener(this) {
-                        lifecycleScope.launch {
-                            userPrefs.saveLoginStatus(true)
-                            startActivity(Intent(this@Login, Profile::class.java))
-                            finish()
+                lifecycleScope.launch {
+                    try {
+                        binding.btnLogin.isEnabled = false
+
+                        supabase.auth.signInWith(Email){
+                            email = em
+                            password = pass
                         }
+
+                        startActivity(Intent(this@Login, Profile::class.java))
+                        finish()
+                    }catch (e: Exception){
+                        binding.tilLEmail.error = "Invalid email or password"
+                        Log.e("Login", "Error: ${e.message}")
+                    }finally {
+                        binding.btnLogin.isEnabled = true
                     }
-                    .addOnFailureListener(this){
-                        binding.tilLPass.error = "Invalid email or password"
-                    }
+                }
             }
         }
 

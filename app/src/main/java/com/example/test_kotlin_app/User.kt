@@ -1,14 +1,8 @@
 package com.example.test_kotlin_app
 
+import kotlinx.serialization.Serializable
 
-data class User(var name: String = "", var email: String = "", var address: String = "", var description: String = ""){
+@Serializable
+data class User(var userID: String = "", var name: String = "", var email: String = "", var address: String = "", var avatarUrl: String = "", var description: String = ""){
 
-    fun toHashMap(): HashMap<String, Any> {
-        val map = HashMap<String, Any>()
-        map["name"] = name
-        map["email"] = email
-        map["address"] = address
-        map["description"] = description
-        return map
-    }
 }

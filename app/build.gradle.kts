@@ -43,20 +43,18 @@ android {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation(platform("io.github.jan-tennert.supabase:bom:3.4.1"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-android:3.4.2")
+    implementation("com.github.bumptech.glide:glide:5.0.5")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation("com.google.android.material:material:1.13.0")
-    implementation("androidx.datastore:datastore-preferences:1.2.1")
     implementation(libs.firebase.auth)
-    implementation(platform("com.google.firebase:firebase-bom:34.11.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
