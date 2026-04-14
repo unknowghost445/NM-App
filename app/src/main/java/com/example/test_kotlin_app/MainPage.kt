@@ -46,10 +46,9 @@ class MainPage : AppCompatActivity() {
         lifecycleScope.launch {
             val listView = binding.lvMView
             val data = Database.PostItems.getPostItemsByUser()
-            val user = Database.UserRepo.getUser()
+            val usersById = Database.UserRepo.getAllUsers().associateBy { it.userID }
 
-
-            val adapter = ItemAdapter(this@MainPage, R.layout.item_post, data, user)
+            val adapter = ItemAdapter(this@MainPage, R.layout.item_post, data, usersById)
             listView.adapter = adapter
         }
     }
