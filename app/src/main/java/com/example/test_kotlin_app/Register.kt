@@ -2,6 +2,7 @@ package com.example.test_kotlin_app
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -54,7 +55,8 @@ class Register : AppCompatActivity() {
                         if (e.message?.contains("User already registered") == true) {
                             binding.etREmail.error = "Email already exists"
                         } else {
-                            Toast.makeText(this@Register, e.message, Toast.LENGTH_SHORT).show()
+                            Log.e("Register", "Error: ${e.message}")
+                            e.printStackTrace()
                         }
                     }
 

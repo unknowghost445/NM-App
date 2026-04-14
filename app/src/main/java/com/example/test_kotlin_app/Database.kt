@@ -11,8 +11,8 @@ object Database {
     object SupabaseClient {
         val client = createSupabaseClient(
             supabaseUrl = "https://tdqoqnnbdgayqdmeaadr.supabase.co",
-            supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkcW9xbm5iZGdheXFkbWVhYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MDQyODgsImV4cCI6MjA5MDQ4MDI4OH0.lx8XEVXyVL77FwZdN1S2oInKeu9L6q0Fq3Covf9-Xpw",
-            ){
+            supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkcW9xbm5iZGdheXFkbWVhYWRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MDQyODgsImV4cCI6MjA5MDQ4MDI4OH0.lx8XEVXyVL77FwZdN1S2oInKeu9L6q0Fq3Covf9-Xpw"
+        ){
             install(io.github.jan.supabase.auth.Auth)
             install(Postgrest)
         }
@@ -24,13 +24,7 @@ object Database {
         suspend fun getPostItemsByUser(): List<Post> {
             val userID = supabase.auth.currentUserOrNull()?.id ?: return emptyList()
 
-            return SupabaseClient.client.from("postdata").select {
-                filter {
-                    eq("userID", userID)
-                }
-                order("id", Order.DESCENDING)
-            }
-                .decodeList<Post>()
+            return SupabaseClient.client.from("postdata").select().decodeList<Post>()
         }
 
         suspend fun post(data: String) {
