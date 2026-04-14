@@ -9,20 +9,26 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 
-class ItemAdapter(context: Context, val resource: Int, val items: List<Post>, val user: User?) : ArrayAdapter<Post>(context, resource, items) {
+class ItemAdapter(
+    context: Context,
+    val resource: Int,
+    val items: List<Post>,
+    private val usersById: Map<String, User>
+) : ArrayAdapter<Post>(context, resource, items) {
     @Override
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val v = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_post, parent, false)
         val post = items[position]
+        val postUser = usersById[post.userID]
 
         val name = v.findViewById<TextView>(R.id.tvIPName)
         val avatarUrl = v.findViewById<ImageView>(R.id.imgIPAvatar)
         val date = v.findViewById<TextView>(R.id.tvIPDate)
         val data = v.findViewById<TextView>(R.id.tvIPData)
 
-        name.text = user?.name
+        name.text = postUser?.name ?: "Unknown user"
         Glide.with(context)
-            .load(user?.avatarUrl ?: "")
+            .load(postUser?.avatarUrl ?: "")
             .into(avatarUrl)
         date.text = post.date
         data.text = post.data

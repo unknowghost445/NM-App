@@ -80,6 +80,10 @@ object Database {
     object UserRepo{
         private val supabase = SupabaseClient.client
 
+        suspend fun getAllUsers(): List<User> {
+            return supabase.from("users").select().decodeList<User>()
+        }
+
         suspend fun getUser(): User?{
             val userID = supabase.auth.currentUserOrNull()?.id ?: return null
 
